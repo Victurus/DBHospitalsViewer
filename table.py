@@ -30,13 +30,34 @@ class DBHelper(object):
 		return rows
 
 	def insert_query(self, to_tablename, values):
-		query = "INSERT INTO %s VALUES " % (self.check_tblname(to_tablename).upper())
-		cleanvalues = ""
-		for item in values:
-			cleanvalues += "%s," % (self.clean_value(item, '-'))
-		cleanvalues = "(%s)" % (cleanvalues[0:-1])
-		query += cleanvalues
-		self.cursor.execute(query)
+		tbn = self.check_tblname(to_tablename)
+		if tbn != "":
+			query = "INSERT INTO %s VALUES " % (tbn.upper())
+			cleanvalues = ""
+			for item in values:
+				if item.isdigit():
+					cleanvalues += "%s," % (self.clean_value(item, '- '))
+				else:
+					cleanvalues += "N'%s'," % (self.clean_value(item, '- '))
+			cleanvalues = "(%s)" % (cleanvalues[0:-1])
+			query += cleanvalues
+			self.cursor.execute(query)
+			self.commit()
+			return "Data inserted"
+		else:
+			return "Error: table name not found"
+
+	def delete_query(self, from_tablename, where_rule):
+		tbn = self.check_tblname(to_tablename)
+		if tbn != "":
+			query = "DELETE FROM %s " % (tbn)
+			if where_rule != "":
+				new_rule = where_rule
+				self.cursor.execute(query)
+				self.commit()
+			return "Data deleted"
+		else:
+			return "Error: table name not found"
 
 	def get_description(self, tablename):
 		query = "SELECT * FROM  %s" % (tablename)
@@ -59,10 +80,10 @@ class DBHelper(object):
 		self.connector.commit()
 	
 	def check_tblname(self, tablename):
-		if tablename in self.tables:
-			return tablename
-		else:
-			return ""
+		for item in self.tables:
+			if item[0] == tablename:
+				return tablename
+		return ""
 
 	def clean_value(self, value, allowsymbols):
 		newvalue = ""

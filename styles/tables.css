@@ -182,12 +182,20 @@ body
 	background-color: #CCCC00;
 }
 
-.main .left .queries
+.main .left #queries
 {
 	background-color: #FEFE50;
 	margin-top: 10px;
 	height: 250px;
 	width: 100%;
+	overflow: auto;
+}
+
+.main .left #queries span 
+{
+	position: relative;
+	display: inline-block;
+	width: 50%;
 }
 
 /* Конец характеристик левого блока */
@@ -253,19 +261,33 @@ table
 	position: relative;
 	width: 100%;
 	height: 240px;
+	overflow: auto;
+	display: flex;
+	flex-direction: row;
 }
 
 .main .right #manipulator #insdel
 {
 	position: relative;
-	width: 80%;
+	height: 100%;
+	overflow: auto;
+	width: 70%;
+	margin:0;
+	border: 1px solid black;
+}
+
+.main .right #manipulator #insdel span
+{
+	display: inline-block;
+	position: relative;
+	width: 20%;
 }
 
 .main .right #manipulator #move
 {
 	position: relative;
-	margin-right: 0;
-	width: 20%;
+	display: block;
+	width: 30%;
 }
 
 .main .right #manipulator #move .pn

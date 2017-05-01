@@ -39,8 +39,7 @@ html = """
 			</div>
 		</div>
 
-		<div class="queries">
-			
+		<div id="queries">
 		</div>
 	</div>
 
@@ -93,7 +92,7 @@ message = "У вас нет прав для просмотра этой инфо
 
 if 'who' in form:
 	if form['who'].value == 'admin':
-		access = "full"
+		access = "admin"
 		strow = 0
 		cntrow = 50
 		fcol = 0

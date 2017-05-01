@@ -112,7 +112,7 @@ def get_dependence(tableindex, rowid, access):
 		dependence_query.append( (index, row[2]) )
 
 	tables = []
-	if access == "full": # отображать id или нет
+	if access == "admin": # отображать id или нет
 		fcol = 0
 	else:
 		fcol = 1
@@ -157,13 +157,100 @@ def get_dependence(tableindex, rowid, access):
 
 	return result_value
 
+def get_insdelserch(tablename, menu, access='user'):
+	description = Hospitals.get_description(tablename)
+	result_value = ""
+	ids = ""
+	if access == 'user':
+		description = description[1:]
+
+	menu = menu.lower()
+	if menu == 'insert':
+		for item in description:
+			ids += "%s_%s," % (item, menu)
+			result_value += """
+				<div> <span> %s </span><input id='%s_%s' type='text'> </div>
+	""" % (item, item, menu)
+		ids = ids[0:-1]
+		result_value += """
+	<button onclick='insertdata("%s")'> Insert </button>
+""" % (ids)
+	elif menu == 'delete':
+		for item in description:
+			ids += "%s_%s," % (item, menu)
+			result_value += """
+				<div> <span> %s </span><input id='%s_%s' type='text'> </div>
+	""" % (item, item, menu)
+		ids = ids[0:-1]
+		result_value += """
+	<button onclick='deletedata("%s")'> Delete </button>
+""" % (ids)
+	elif menu == 'search':
+		for item in description:
+			ids += "%s_%s," % (item, menu)
+			result_value += """
+				<div> <span> %s </span><input id='%s_%s' type='text'> </div>
+	""" % (item, item, menu)
+		ids = ids[0:-1]
+		result_value += """
+	<button onclick='searchdata("%s")'> Search </button>
+""" % (ids)
+	else:
+		result_value = "Error occured"
+
+	return result_value
+
 def get_ins_del(tableindex, access):
 	tablename = table_names[tableindex][0]
 	tablerealname = table_names[tableindex][1]
 	tableaccess = table_names[tableindex][2]
-	if access == tableaccess == 'user':
-		print("Доступ user")
-	elif access == tableaccess == 'full':
-		print("Доступ admin")
+	result_value = ""
+	if access == 'admin' and tableaccess != 'none':
+		result_value = """
+		<div id='insert'>
+			%s
+		</div>
+		<div id='delete'>
+			%s
+		</div>
+		""" % (get_insdelserch(tablename, 'insert', access), get_insdelserch(tablename, 'delete', access))
+	elif access == 'user' and tableaccess == 'user':
+		result_value = """
+		<div id='insert'>
+			%s
+		</div>
+		<div id='delete'>
+			%s
+		</div>
+		""" % (get_insdelserch(tablename, 'insert', access), get_insdelserch(tablename, 'delete', access))
+	elif access == 'user' and tableaccess == 'admin':
+		result_value = """
+		<div id='insert'>
+			%s
+		</div>
+		<div id='delete'>
+			%s
+		</div>
+		""" % ("None", "None")
 	else:
-		print("Нет доступа")
+		result_value = """
+		<div id='insert'>
+			%s
+		</div>
+		<div id='delete'>
+			%s
+		</div>
+		""" % ("None", "None")
+	return result_value
+
+def inserter(tableindex, data):
+	send_data = data.split(',')
+	return Hospitals.insert_query(table_names[tableindex][0], send_data)
+
+def deleter(tableindex, data):
+	send_data = data.split(',')
+	return Hospitals.delete_query(table_names[tableindex][0], data)
+
+def searcher(tableindex, data):
+	send_data = data.split(',')
+	print()

@@ -44,6 +44,36 @@ function get_content(params, method, url, fill_id)
 	request.send(params)
 }
 
+function set_content(params, method, url)
+{
+	var request = new ajaxRequest()
+
+	request.open("POST", url, true)
+	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+	request.setRequestHeader("Content-length", params.length)
+	request.setRequestHeader("Connection", "close")
+
+	request.onreadystatechange = function()
+	{
+		if (this.readyState == 4)
+		{
+			if (this.status == 200)
+			{
+				if (this.responseText != null)
+				{
+					alert(`Результат запроса: ${this.responseText}`)
+				}
+				else
+					alert("Ошибка AJAX: Данные не получены")
+			}
+			else
+				alert("Ошибка AJAX: " + this.statusText)
+		}
+	}
+
+	request.send(params)
+}
+
 function ajaxRequest()
 {
 	try
@@ -112,6 +142,11 @@ function get_table(tableindex, access, is_tables)
 
 	$('prevtxt').value = strow
 	$('nexttxt').value = strow + cntrow
+
+	query = `tableindex=${tableindex}&access=${access}`
+	get_content(query, 'POST', 'get_insdel.py', 'insdel')
+	query = `tableindex=${tableindex}`
+	get_content(query, 'POST', 'get_searcher.py', 'queries')
 }
 
 function prev()
@@ -178,4 +213,42 @@ function change_view(table_name)
 	$(`${not_todisplay}`).style.display = "none"
 	$('cur_display').value = table_name
 	$(table_name).style.display = "inline"
+}
+
+function insertdata(data)
+{
+	var ids = data.split(',')
+	var query = "data="
+	for (var i = 0; i < ids.length - 1; i++) 
+	{
+		query += `${$(ids[i]).value},`
+	}
+	query += `${$(ids[ids.length - 1]).value}&`
+	query += `tableindex=${$('tableindex').value}`
+	set_content(query, 'POST', 'set_insert.py')
+}
+
+function deletedata(data) 
+{
+	var ids = data.split(',')
+	var query = "data="
+	for (var i = 0; i < ids.length - 1; i++) 
+	{
+		query += `${$(ids[i]).value},`
+	}
+	query += `${$(ids[ids.length - 1]).value}&`
+	query += `tableindex=${$('tableindex').value}`
+	set_content(query, 'POST', 'set_delete.py')
+}
+
+function searchdata(data)
+{
+	var ids = data.split(',')
+	var query = "data="
+	for (var i = 0; i < ids.length - 1; i++) 
+	{
+		query += `${$(ids[i]).value},`
+	}
+	query += `${$(ids[ids.length - 1]).value}&`
+	query += `tableindex=${$('tableindex').value}`
 }

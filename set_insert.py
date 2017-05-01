@@ -7,13 +7,12 @@ cgitb.enable()
 
 form = cgi.FieldStorage()
 
-header = "Content-type: text/html"
-result = ""
+header = "Content-type: text/html\n"
+result = "Nothing happens"
 
-tableindex = -1
-
-if 'tableindex' in form:
+if 'data' in form and 'tableindex' in form:
 	tableindex = int(form.getvalue('tableindex'))
-	result = get_insdelserch(table_names[tableindex][0], 'search')
+	data = form.getvalue('data')
+	result = inserter(tableindex, data)
 
 print(header, result, sep='\n')

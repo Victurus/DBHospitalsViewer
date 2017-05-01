@@ -1,0 +1,114 @@
+body
+{
+	outline: 0;
+	margin: 0;
+	padding: 0;
+	background-color: aqua;
+}
+
+.main
+{
+	display: flex;
+	flex-direction: row;
+	align-content: center;
+	height: 400px;
+	margin-top: 10%;
+	margin-left: 0;
+}
+
+.main .left,.middle,.right
+{
+	height: 100%;
+	background-color: rgba(0, 255, 255, .5);
+	z-index: 1;
+}
+
+.main .left
+{
+	width: 30%;
+	z-index: 0;	
+}
+
+.main .left .congrat
+{
+	margin: 10%;
+	padding: 15%;
+	font-size: 16pt;
+	font-family: Georgia, serif;
+}
+
+/* начало характеристик средней части страницы */
+.main .middle
+{
+	width: 40%;
+	box-shadow: 0 0 5px 7px #0066FF;
+}
+
+.main .middle .info
+{
+	position: relative;
+	width: 90%;
+	height: 80%;
+	box-sizing: border-box;
+	margin: 5%;
+	padding: 7%;
+	background-color: #0066FF;
+}
+
+.main .middle .info span
+{
+	font-family: Impact;
+  	font-size: 3em;
+}
+
+.main .middle .info_data
+{
+	display: flex;
+	flex-direction: row;
+}
+
+.info_data input, .logpass div
+{
+	/*margin: 5px;*/
+	margin-bottom: 7px; 
+	font:  14pt "Segoe Script";
+}
+
+.main .middle .info_data input
+{
+	outline: 0;
+	border: 0;
+	width: 100%;
+	background: #80B3FF;
+	box-sizing: border-box;
+}
+
+.main .middle .info .formsender input
+{
+	outline: 0;
+	border: 0;
+	padding: 5px;
+	background-color: blue;
+	margin-top: 5px;
+	width: 100%;
+	font-size: 14pt;
+	height: 50px;
+	box-sizing: border-box;
+	transition: background 0.4s ease-in-out; /* задержка перед действием */
+}
+
+.main .middle .info .formsender input:hover
+{
+	background-color: #0047B3;
+}
+
+.main .middle .info .formsender input:active
+{
+	background-color: #002966;	
+}
+/* Конецц характеристик средней части страницы */
+.main .right	
+{
+	width: 30%;
+	z-index: 0;
+}

@@ -1,0 +1,108 @@
+ /* глобальная конфигурация */
+body  
+{
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  background: #A52A2A url(images/site-background.jpg);
+}
+
+/* деление на блоки и  */
+.login_page
+{
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+}
+
+/* отступ формы */
+.login_form
+{
+  margin: 30% 10%;
+  box-sizing: border-box;
+  box-shadow: 0 0 5px 10px #666;
+  width: 420px;
+  border-radius: 23em/3em;
+  border-bottom-right-radius: 25%;
+  border-bottom-left-radius: 25%;
+}
+
+/* общие характеристики заголовка формы и её сдержимого*/
+.login_form form, .form_header
+{ 
+  padding: 10px 30px;
+  position: relative;
+  width: 360px;
+}
+
+/* характеризация элементов самой формы */
+.login_form form
+{
+  padding: 20px 30px;
+  border-bottom-right-radius: 15%;
+  border-bottom-left-radius: 15%;
+  background-color: #FFFFFF;
+}
+
+/* характеристика заголовка формы */
+.login_form .form_header
+{
+  border-top-right-radius: 35%;
+  border-top-left-radius: 35%;
+  text-align: center;
+  font-family: Impact;
+  font-size: 3em;
+  background-color: #CD853F;
+}
+
+/* общий формат кнопки и ввода*/
+form input, button
+{
+  outline: 0;
+  border: 0;
+  box-sizing: border-box;
+  width: 355px;
+  font: 14pt Verdana;
+}
+
+/* формат полей формы */
+form input
+{
+  background: #F2F2F2;
+  padding: 10px 10px 7px;
+  margin: 10px 0;
+  transition: background 0.2s ease-in-out; /* задержка перед действием */
+}
+
+/* формат кнопки */
+form button
+{
+  text-transform: uppercase;
+  background-color: #CD853F;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out; /* задержка перед действием */
+  padding: 10px;
+}
+
+button:hover
+{
+  background-color: #A0522D;
+}
+
+/* всё далее характеризует правую часть страницы */
+/* общие свойства правого блока */
+.login_page .right
+{
+  margin: 0;
+  padding: 0;
+  font: 2em "Monotype Corsiva";
+}
+
+/* характеристика текста */
+.login_page .right .info
+{
+  position: relative;
+  color: #DCDCDC;
+  top: 30%;
+  left: 40%;
+}

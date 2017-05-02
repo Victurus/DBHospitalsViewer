@@ -29,17 +29,32 @@ views = [
 Hospitals = DBHelper("ODBC Driver 13 for SQL Server", "ASUS", "Hospitals", "victor", "tir", table_names, views)
 Hospitals.set_cursor()
 
-def table_str(index, strow, cntrow, is_tables, fcol=-1, ecol=-1, show_gdependence=True, where_rules=""):
+def table_str(index, strow, cntrow, is_tables, fcol=-1, ecol=-1, show_gdependence=True, where_rules="", ids=""):
 	""" Отображение запроса select таблицей <table> </table> """
+	ids = ids.split(',')
+	val_data = where_rules.split(',')
+	send_data = ""
+	modified_data = []
+	for item in map(func, ids, val_data):
+		if item != "" and item != "[]":
+			modified_data.append(item)
+
+	if modified_data != []:
+		send_data += " %s " % (modified_data[0])
+
+	for item in modified_data[1:]:
+		if item != "":
+			send_data += " AND %s " % (item)
+
 	if is_tables:
-		rows = Hospitals.select_query(table_names[index][0], where_rules=where_rules)
+		rows = Hospitals.select_query(table_names[index][0], where_rules=send_data)
 		realtbname = table_names[index][1]
 		if show_gdependence:
 			btn_header = '<th> Get dependency </th>'
 		else:
 			btn_header = ""
 	else:
-		rows = Hospitals.get_table_rows(views[index][0])
+		rows = Hospitals.select_query(views[index][0], where_rules=send_data)
 		realtbname = views[index][1]
 		btn_header = ''
 
@@ -99,7 +114,7 @@ def get_dependence(tableindex, rowid, access):
 	""" Вывод данных дочерних таблиц соответствующих полю родительской таблицы """
 	tablename = table_names[tableindex][0]
 	tablerealname = table_names[tableindex][1]
-	rows = Hospitals.select_query("get_dependencies", where_rules=" TABLETO = '%s'" % tablename)
+	rows = Hospitals.select_query("get_dependencies", where_rules=" TABLETO = '%s'" % (tablename))
 	result_value = ""
 	dependence_query = []
 	for row in rows[1:]: # не берём названия полей
@@ -130,7 +145,7 @@ def get_dependence(tableindex, rowid, access):
 		tables.append("""
 			<div id='%s'>
 				%s
-			</div>""" % (table_names[fst_index][0], table_str(fst_index, 0, -1, 1, fcol, show_gdependence=False, where_rules=" %s = %d " % (fst_field, rowid) ) ) )
+			</div>""" % (table_names[fst_index][0], table_str(fst_index, 0, -1, 1, fcol, show_gdependence=False, where_rules="%d" % (rowid), ids = "%s" % (fst_field) ) ) )
 
 		# выборка, запись кнопок
 		# t - table; f - field
@@ -144,7 +159,7 @@ def get_dependence(tableindex, rowid, access):
 				<div id='%s' style='display: none;'>
 					%s
 				</div>
-				""" % (tbn, table_str(t, 0, -1, 1, fcol, show_gdependence=False, where_rules=" %s = %d " % (f, rowid) ) ) )
+				""" % (tbn, table_str(t, 0, -1, 1, fcol, show_gdependence=False, where_rules="%d" % (rowid), ids='%s' % (f) ) ) )
 		result_value += "</div>" # закрытие класса кнопок переключения таблиц
 
 		# запись таблиц
@@ -200,10 +215,14 @@ def get_insdelserch(tablename, menu, access='user'):
 
 	return result_value
 
-def get_ins_del(tableindex, access):
-	tablename = table_names[tableindex][0]
-	tablerealname = table_names[tableindex][1]
-	tableaccess = table_names[tableindex][2]
+def get_ins_del(tableindex, access, is_tables):
+	if is_tables:
+		myarray = table_names
+	else:
+		myarray = views
+	tablename = myarray[tableindex][0]
+	tablerealname = myarray[tableindex][1]
+	tableaccess = myarray[tableindex][2]
 	result_value = ""
 	if access == 'admin' and tableaccess != 'none':
 		result_value = """
@@ -231,7 +250,7 @@ def get_ins_del(tableindex, access):
 		<div id='delete'>
 			%s
 		</div>
-		""" % ("None", "None")
+		""" % ("", "")
 	else:
 		result_value = """
 		<div id='insert'>
@@ -240,16 +259,42 @@ def get_ins_del(tableindex, access):
 		<div id='delete'>
 			%s
 		</div>
-		""" % ("None", "None")
+		""" % ("", "")
 	return result_value
 
-def inserter(tableindex, data):
+def inserter(tableindex, data, is_tables):
 	send_data = data.split(',')
-	return Hospitals.insert_query(table_names[tableindex][0], send_data)
+	if (is_tables == 1):
+		myarray = table_names
+	else:
+		myarray = views
+	return Hospitals.insert_query(myarray[tableindex][0], send_data)
 
-def deleter(tableindex, data):
-	send_data = data.split(',')
-	return Hospitals.delete_query(table_names[tableindex][0], data)
+def func(id, val):
+	if val.isdigit():
+		return "%s = %s" % (id, val)
+	elif val != "":
+		return "[%s] LIKE '%%%s%%'" % (id, val)
+	else: 
+		return ""
+
+def deleter(tableindex, ids, data):
+	ids = ids.split(',')
+	val_data = data.split(',')
+	send_data = ""
+	modified_data = []
+	for item in map(func, ids, val_data):
+		if item != "":
+			modified_data.append(item)
+
+	if modified_data != []:
+		send_data += " %s " % (modified_data[0])
+
+	for item in modified_data[1:]:
+		if item != "":
+			send_data += " AND %s " % (item)
+
+	return Hospitals.delete_query(table_names[tableindex][0], send_data)
 
 def searcher(tableindex, data):
 	send_data = data.split(',')

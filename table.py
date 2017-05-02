@@ -48,12 +48,12 @@ class DBHelper(object):
 			return "Error: table name not found"
 
 	def delete_query(self, from_tablename, where_rule):
-		tbn = self.check_tblname(to_tablename)
+		tbn = self.check_tblname(from_tablename)
 		if tbn != "":
 			query = "DELETE FROM %s " % (tbn)
 			if where_rule != "":
-				new_rule = where_rule
-				self.cursor.execute(query)
+				new_rule = "WHERE %s" % (where_rule)
+				self.cursor.execute(query + new_rule)
 				self.commit()
 			return "Data deleted"
 		else:
@@ -80,10 +80,14 @@ class DBHelper(object):
 		self.connector.commit()
 	
 	def check_tblname(self, tablename):
+		curtable = ""
 		for item in self.tables:
 			if item[0] == tablename:
-				return tablename
-		return ""
+				curtable = tablename
+		for item in self.views:
+			if item[0] == tablename:
+				curtable = tablename
+		return curtable
 
 	def clean_value(self, value, allowsymbols):
 		newvalue = ""

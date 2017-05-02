@@ -18,11 +18,19 @@ if 'table' in form and 'access' in form and 'fcol' in form and 'ecol' in form an
 	strow = int(form.getvalue('strow'))
 	cntrow = int(form.getvalue('cntrow'))
 	is_tables = int(form.getvalue('is_tables'))
+	if 'data' in form and 'ids' in form:
+		where_rules = form.getvalue('data')
+		ids = form.getvalue('ids')
+		ids = ids.replace('_search', '')
+	else:
+		where_rules = ""
+		ids = ""
+
 
 print("Content-type: text/html")
 print()
 
 if tableindex != -1:
-	print(table_str(tableindex, strow, cntrow, is_tables, fcol, ecol))
+	print(table_str(tableindex, strow, cntrow, is_tables, fcol, ecol, where_rules=where_rules, ids=ids))
 else:
 	print("Ошибка: такой таблицы/представления нет!")

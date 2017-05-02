@@ -3,6 +3,8 @@ function set_view(doc)
 	doc.getElementsByClassName('tables')[0].style.display= "none"
 	doc.getElementsByClassName('views')[0].style.display= "block"
 	$('is_tables').value = 0
+	$('queries').innerHTML = ""
+
 }
 
 function set_table(doc) 
@@ -142,10 +144,9 @@ function get_table(tableindex, access, is_tables)
 
 	$('prevtxt').value = strow
 	$('nexttxt').value = strow + cntrow
-
-	query = `tableindex=${tableindex}&access=${access}`
+	query = `tableindex=${tableindex}&access=${access}&is_tables=${is_tables}`
 	get_content(query, 'POST', 'get_insdel.py', 'insdel')
-	query = `tableindex=${tableindex}`
+	query = `tableindex=${tableindex}&is_tables=${is_tables}&access=${access}`
 	get_content(query, 'POST', 'get_searcher.py', 'queries')
 }
 
@@ -223,15 +224,16 @@ function insertdata(data)
 	{
 		query += `${$(ids[i]).value},`
 	}
+	is_tables = $('is_tables').value
 	query += `${$(ids[ids.length - 1]).value}&`
-	query += `tableindex=${$('tableindex').value}`
+	query += `tableindex=${$('tableindex').value}&is_tables=${is_tables}`
 	set_content(query, 'POST', 'set_insert.py')
 }
 
 function deletedata(data) 
 {
 	var ids = data.split(',')
-	var query = "data="
+	var query = `ids=${data}&data=`
 	for (var i = 0; i < ids.length - 1; i++) 
 	{
 		query += `${$(ids[i]).value},`
@@ -244,11 +246,19 @@ function deletedata(data)
 function searchdata(data)
 {
 	var ids = data.split(',')
-	var query = "data="
+	var fcol = $('fcol').value
+	var ecol = $('ecol').value
+	var strow = parseInt($('strow').value, 10)
+	var cntrow = parseInt($('cntrowhidden').value , 10)
+	var tableindex = $('tableindex').value
+	var access = $('access').value
+	var is_tables = $('is_tables').value
+	var query = `table=${tableindex}&access=${access}&fcol=${fcol}&ecol=${ecol}&strow=${strow}&cntrow=${cntrow}&is_tables=${is_tables}`
+	query += `&ids=${data}&data=`
 	for (var i = 0; i < ids.length - 1; i++) 
 	{
 		query += `${$(ids[i]).value},`
 	}
-	query += `${$(ids[ids.length - 1]).value}&`
-	query += `tableindex=${$('tableindex').value}`
+	query += `${$(ids[ids.length - 1]).value}`
+	get_content(query, 'POST', 'get_table.py', 'table')
 }

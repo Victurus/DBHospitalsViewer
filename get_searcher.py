@@ -12,8 +12,14 @@ result = ""
 
 tableindex = -1
 
-if 'tableindex' in form:
+if 'tableindex' in form and 'is_tables' in form and 'access' in form:
 	tableindex = int(form.getvalue('tableindex'))
-	result = get_insdelserch(table_names[tableindex][0], 'search')
+	is_tables = int(form.getvalue('is_tables'))
+	access = form.getvalue('access')
+	if (is_tables == 1):
+		myarray = table_names
+	else:
+		myarray = views
+	result = get_insdelserch(myarray[tableindex][0], 'search', access)
 
 print(header, result, sep='\n')

@@ -26,7 +26,6 @@ if 'table' in form and 'access' in form and 'fcol' in form and 'ecol' in form an
 		where_rules = ""
 		ids = ""
 
-
 print("Content-type: text/html")
 print()
 

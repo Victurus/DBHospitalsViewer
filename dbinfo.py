@@ -21,9 +21,17 @@ table_names = [
 ]
 
 views = [
-('doctor_finder', 'Упрощённый поиск докторов', 'none'),
-('patients_info', 'Информация о пациентах'   , 'none'),
-('VIEW_hospital', 'Справочник госпитали'     , 'admin')
+('doctor_finder'              , 'Упрощённый поиск докторов'             , 'none'),
+('patients_info'              , 'Информация о пациентах'                , 'none'),
+('VIEW_hospital'              , 'Справочник госпитали'                  , 'admin'),
+('HospitalsRoom'              , 'Количество комнат в госпитале'         , 'none'), 
+('dbo.DoctorInfoConn'         , 'Связь с данными о докторах'            , 'none'),
+('dbo.PatientInfoConn'        , 'Связь с данными о пациентах'           , 'none'),
+('dbo.DoctorInfo'             , 'Информация о докторах'                 , 'none'),
+('dbo.PatientInfo'            , 'Информация о пациентах'                , 'none'),
+('dbo.PatientEntryDates'      , 'Дни записи пациентов'                  , 'none'),
+('dbo.PatientDischargeDates'  , 'Дни выписки пациентов'                 , 'none'),
+('dbo.PatientDoctorVisitDates', 'Даты посещения пациентов'              , 'none')
 ]
 
 Hospitals = DBHelper("ODBC Driver 13 for SQL Server", "ASUS", "Hospitals", "victor", "tir", table_names, views)
